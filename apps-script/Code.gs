@@ -1,6 +1,6 @@
 /**
  * Backend gratuito (Google Apps Script) para o envio por e-mail da
- * "Ficha de Cadastro de Empresa" gerada em ficha-cnpj.html.
+ * "Ficha de Cadastro de Empresa" gerada em index.html.
  *
  * Não usa nenhum servidor próprio nem serviço pago: roda vinculado à sua
  * conta Google e envia e-mail pela sua própria caixa Gmail (MailApp),
@@ -10,7 +10,7 @@
  */
 
 // Defina aqui um token secreto (qualquer string aleatória sua). O mesmo valor
-// deve ser colado no campo "Token compartilhado" em ficha-cnpj.html.
+// deve ser colado no campo "Token compartilhado" em index.html.
 // Isso evita que alguém que descubra a URL do Web App envie e-mails pela sua conta.
 var TOKEN_SECRETO = 'TROQUE_ESTE_VALOR_POR_UM_TOKEN_SECRETO';
 

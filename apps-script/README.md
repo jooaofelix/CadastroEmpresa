@@ -1,6 +1,6 @@
 # Backend de e-mail (Google Apps Script) — gratuito, sem servidor
 
-Este backend recebe o PDF da ficha (gerado em `ficha-cnpj.html`) e envia por
+Este backend recebe o PDF da ficha (gerado em `index.html`) e envia por
 e-mail usando a sua própria conta Gmail, via `MailApp`. Não tem custo, não
 exige cartão de crédito nem plano pago — só uma conta Google.
 
@@ -26,7 +26,7 @@ Google Workspace). Mais que suficiente para uso interno de baixo volume.
    **autorizar** o script a enviar e-mail em seu nome — é normal, aceite
    (é o próprio Google avisando que o script agirá como você).
 7. Copie a **URL do app da Web** (termina em `/exec`).
-8. Abra `ficha-cnpj.html` no navegador, vá em **Configuração do envio** e
+8. Abra `index.html` no navegador, vá em **Configuração do envio** e
    cole:
    - **URL do Web App**: a URL copiada no passo 7.
    - **Token compartilhado**: o mesmo valor que você colocou em `TOKEN_SECRETO`.
@@ -42,7 +42,7 @@ Só salvar o arquivo não atualiza a versão publicada.
 ## Por que `text/plain` no envio (não `application/json`)?
 
 O Google Apps Script Web App não responde de forma confiável a requisições
-de "preflight" CORS (`OPTIONS`). Por isso `ficha-cnpj.html` envia o payload
+de "preflight" CORS (`OPTIONS`). Por isso `index.html` envia o payload
 como `Content-Type: text/plain`, o que evita o preflight — o `doPost` do
 `Code.gs` mesmo assim faz `JSON.parse(e.postData.contents)` normalmente.
 
