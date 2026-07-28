@@ -571,12 +571,12 @@ async function handleCartaoCNPJ(evento){
       else { naoEncontrados.push(idCampo); }
     }
 
-    // Contratante: prioriza nome fantasia; se não houver (ou vier mascarado como "***",
-    // padrão da Receita para "sem nome fantasia"), usa nome empresarial (razão social)
+    // Contratante: prioriza nome empresarial (razão social); se não houver, usa o nome
+    // fantasia (a menos que venha mascarado como "***", padrão da Receita para "sem fantasia")
     const nomeFantasia = (campos.nomeFantasia||'').replace(/^[:\-\s]+/,'');
     const nomeEmpresarial = (campos.nomeEmpresarial||'').replace(/^[:\-\s]+/,'');
     const fantasiaValida = nomeFantasia && !/^\*+/.test(nomeFantasia);
-    set('f_contratante', fantasiaValida ? nomeFantasia : nomeEmpresarial);
+    set('f_contratante', nomeEmpresarial || (fantasiaValida ? nomeFantasia : ''));
 
     set('f_cnpj', limparCnpj(campos.numeroInscricao));
     set('f_endereco', [campos.logradouro, campos.numeroEnd].filter(Boolean).join(', '));
