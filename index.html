@@ -502,6 +502,10 @@ const ROTULOS_CNPJ = [
   { chave:'numeroInscricao', rotulo:/NÚMERO DE INSCRIÇÃO/i },
   { chave:'nomeEmpresarial', rotulo:/NOME EMPRESARIAL/i },
   { chave:'nomeFantasia', rotulo:/T[ÍI]TULO DO ESTABELECIMENTO[^A-Z]*NOME DE FANTASIA[^)]*\)?/i },
+  // "PORTE" (ex: DEMAIS / MICRO EMPRESA) vem logo depois do Nome Fantasia no layout oficial.
+  // Não é usado na ficha, mas precisa ser reconhecido como rótulo para não "vazar" para
+  // dentro do Nome Fantasia (era exatamente esse o bug: o texto do porte virava o nome).
+  { chave:'porte', rotulo:/\bPORTE\b/i },
   { chave:'cnaePrincipal', rotulo:/C[ÓO]DIGO E DESCRI[ÇC][ÃA]O DA ATIVIDADE ECON[ÔO]MICA PRINCIPAL/i },
   { chave:'cnaeSecundario', rotulo:/C[ÓO]DIGO E DESCRI[ÇC][ÃA]O DAS ATIVIDADES ECON[ÔO]MICAS SECUND[ÁA]RIAS/i },
   { chave:'naturezaJuridica', rotulo:/C[ÓO]DIGO E DESCRI[ÇC][ÃA]O DA NATUREZA JUR[ÍI]DICA/i },
@@ -567,10 +571,12 @@ async function handleCartaoCNPJ(evento){
       else { naoEncontrados.push(idCampo); }
     }
 
-    // Contratante: prioriza nome fantasia; se não houver, usa nome empresarial (razão social)
+    // Contratante: prioriza nome fantasia; se não houver (ou vier mascarado como "***",
+    // padrão da Receita para "sem nome fantasia"), usa nome empresarial (razão social)
     const nomeFantasia = (campos.nomeFantasia||'').replace(/^[:\-\s]+/,'');
     const nomeEmpresarial = (campos.nomeEmpresarial||'').replace(/^[:\-\s]+/,'');
-    set('f_contratante', nomeFantasia && nomeFantasia !== '***' ? nomeFantasia : nomeEmpresarial);
+    const fantasiaValida = nomeFantasia && !/^\*+/.test(nomeFantasia);
+    set('f_contratante', fantasiaValida ? nomeFantasia : nomeEmpresarial);
 
     set('f_cnpj', limparCnpj(campos.numeroInscricao));
     set('f_endereco', [campos.logradouro, campos.numeroEnd].filter(Boolean).join(', '));
