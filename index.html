@@ -165,12 +165,13 @@
       <div class="card-corpo">
         <div class="file-drop" id="dropzone-cnpj">
           <div class="titulo-drop">📄 Importar Cartão CNPJ</div>
-          <div>Extrai automaticamente Razão Social/Nome Fantasia, CNPJ, endereço, CEP e CNAE. Sempre confira os campos abaixo antes de gerar a ficha.</div>
+          <div>Extrai automaticamente Razão Social/Nome Fantasia, CNPJ, endereço, CEP, CNAE e Situação Cadastral (Ativo/Inativo). Sempre confira os campos abaixo antes de gerar a ficha.</div>
           <input type="file" id="input-cnpj" accept=".pdf" onchange="handleCartaoCNPJ(event)">
           <div id="resumo-cnpj"></div>
         </div>
         <div class="nota-heuristica">
-          ⚠ A leitura é por busca de padrões no texto do PDF oficial da Receita Federal — layout diferente (digitalizado/escaneado, por exemplo) pode não extrair tudo. Confira sempre os campos preenchidos.
+          ⚠ A leitura é por busca de padrões no texto do PDF oficial da Receita Federal — layout diferente (digitalizado/escaneado, por exemplo) pode não extrair tudo. Confira sempre os campos preenchidos.<br><br>
+          ℹ O Cartão CNPJ oficial <strong>não traz e-mail nem os sócios/capital social</strong> — esses campos sempre precisam ser preenchidos à mão.
         </div>
       </div>
     </details>
@@ -518,6 +519,11 @@ const ROTULOS_CNPJ = [
   { chave:'bairro', rotulo:/BAIRRO\s*\/?\s*DISTRITO/i },
   { chave:'municipio', rotulo:/MUNIC[ÍI]PIO/i },
   { chave:'uf', rotulo:/\bUF\b/i },
+  { chave:'enteFederativo', rotulo:/ENTE FEDERATIVO RESPONS[ÁA]VEL/i },
+  // Lookbehind negativo evita casar com o título do documento, que também contém a frase
+  // "SITUAÇÃO CADASTRAL" ("COMPROVANTE DE INSCRIÇÃO E DE SITUAÇÃO CADASTRAL"), bem no topo —
+  // foi esse o motivo de esse rótulo ter sido removido antes (colidia e zerava o CNPJ).
+  { chave:'situacaoCadastral', rotulo:/(?<!E DE )SITUA[ÇC][ÃA]O CADASTRAL/i },
 ];
 
 function extrairCamposEntreRotulos(texto){
@@ -586,6 +592,14 @@ async function handleCartaoCNPJ(evento){
     set('f_cep', limparCep(campos.cep));
     set('f_cnae1', campos.cnaePrincipal);
     set('f_cnae2', campos.cnaeSecundario && !/^n[ãa]o informad/i.test(campos.cnaeSecundario) ? campos.cnaeSecundario : '');
+
+    // Situação Cadastral do CNPJ (ATIVA/BAIXADA/SUSPENSA/INAPTA/NULA) mapeada para o
+    // select Ativo/Inativo da seção Fiscal. Só "ATIVA" vira "Ativo"; qualquer outra
+    // situação (empresa não está mais regular perante a Receita) vira "Inativo".
+    const situacaoBruta = (campos.situacaoCadastral||'').trim().toUpperCase();
+    if(situacaoBruta){
+      set('f_situacao', /^ATIVA/.test(situacaoBruta) ? 'Ativo' : 'Inativo');
+    }
 
     render();
 
