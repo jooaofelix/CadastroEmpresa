@@ -17,9 +17,16 @@ de instalação — é um app estático de página única).
    Como é busca por padrões no texto (não é um formato estruturado), **sempre
    confira os campos antes de gerar a ficha** — o site nunca bloqueia a
    geração mesmo se algum campo não for reconhecido.
-2. **Preencha à mão** o que o Cartão CNPJ não traz: Nº do contrato, Contato
-   Principal, Administração, Sócio 01/02 e capital de cada um, Vigência,
-   Plano, Tributação e Valor do Capital.
+2. **Preencha à mão** o que o Cartão CNPJ não traz, organizado em três blocos
+   na ficha:
+   - **Dados Contábeis**: Nº do contrato, Contato Principal, Administração,
+     Sócio 01/02 e capital de cada um, Vigência, Plano, Tributação (Regime
+     Tributário) e Valor do Capital.
+   - **Departamento Pessoal (DP)**: Pró-labore (Sim/Não) e Funcionários (Sim/Não).
+   - **Fiscal**: Emissão de nota pelo escritório (Sim/Não), Regime Tributário
+     (Simples Nacional / Lucro Presumido / Lucro Real — o Anexo do Simples só
+     aparece quando o regime é Simples Nacional), Situação (Ativo/Inativo) e
+     Inscrição Estadual/Municipal (número ou marcar "Isento").
 3. **Baixe o PDF** da ficha ou **envie por e-mail** direto pelo site, com o
    PDF já anexado.
 

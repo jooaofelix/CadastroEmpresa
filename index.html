@@ -125,6 +125,7 @@
   table.ficha td.valor{word-break:break-word;}
   table.ficha td.valor.email a{color:#1155cc;text-decoration:underline;}
   table.ficha td.destaque{font-weight:700;}
+  table.ficha tr.ficha-secao td{background:#3c3c3c;color:#fff;font-weight:800;font-size:11px;letter-spacing:.4px;padding:5px 8px;}
 
   @media print{
     body{background:#fff;}
@@ -202,9 +203,87 @@
         </div>
         <div class="campo-form"><label>CNAE Principal</label><input id="f_cnae1" oninput="render()"></div>
         <div class="campo-form"><label>CNAE Secundário</label><input id="f_cnae2" oninput="render()"></div>
+        <div class="campo-form"><label>Valor Capital</label><input id="f_valorcapital" oninput="render()" placeholder="ex: R$ 100.000,00"></div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary class="card-cabecalho">👔 Departamento Pessoal (DP) <span class="chevron">▶</span></summary>
+      <div class="card-corpo">
         <div class="linha2">
-          <div class="campo-form"><label>Tributação</label><input id="f_tributacao" oninput="render()"></div>
-          <div class="campo-form"><label>Valor Capital</label><input id="f_valorcapital" oninput="render()" placeholder="ex: R$ 100.000,00"></div>
+          <div class="campo-form"><label>Pró-labore</label>
+            <select id="f_prolabore" onchange="render()">
+              <option value="">Selecione</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
+          <div class="campo-form"><label>Funcionários</label>
+            <select id="f_funcionarios" onchange="render()">
+              <option value="">Selecione</option>
+              <option value="Sim">Sim</option>
+              <option value="Não">Não</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <details class="card" open>
+      <summary class="card-cabecalho">💼 Fiscal <span class="chevron">▶</span></summary>
+      <div class="card-corpo">
+        <div class="campo-form"><label>Emissão de nota pelo escritório</label>
+          <select id="f_emissaonota" onchange="render()">
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+          </select>
+        </div>
+        <div class="linha2">
+          <div class="campo-form"><label>Regime Tributário</label>
+            <select id="f_regimetributario" onchange="toggleAnexoSimples()">
+              <option value="">Selecione</option>
+              <option value="Simples Nacional">Simples Nacional</option>
+              <option value="Lucro Presumido">Lucro Presumido</option>
+              <option value="Lucro Real">Lucro Real</option>
+            </select>
+          </div>
+          <div class="campo-form"><label>Situação</label>
+            <select id="f_situacao" onchange="render()">
+              <option value="">Selecione</option>
+              <option value="Ativo">Ativo</option>
+              <option value="Inativo">Inativo</option>
+            </select>
+          </div>
+        </div>
+        <div class="campo-form" id="bloco-anexo-simples" style="display:none;">
+          <label>Anexo do Simples</label>
+          <select id="f_anexosimples" onchange="render()">
+            <option value="">Selecione</option>
+            <option value="Anexo I">Anexo I</option>
+            <option value="Anexo II">Anexo II</option>
+            <option value="Anexo III">Anexo III</option>
+            <option value="Anexo IV">Anexo IV</option>
+            <option value="Anexo V">Anexo V</option>
+          </select>
+        </div>
+        <div class="campo-form">
+          <label>Inscrição Estadual</label>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input id="f_ienumero" oninput="render()" placeholder="Número" style="flex:1;">
+            <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;white-space:nowrap;">
+              <input type="checkbox" id="f_ieisento" onchange="render()" style="width:auto;"> Isento
+            </label>
+          </div>
+        </div>
+        <div class="campo-form">
+          <label>Inscrição Municipal</label>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input id="f_imnumero" oninput="render()" placeholder="Número" style="flex:1;">
+            <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;white-space:nowrap;">
+              <input type="checkbox" id="f_imisento" onchange="render()" style="width:auto;"> Isento
+            </label>
+          </div>
         </div>
       </div>
     </details>
@@ -225,6 +304,7 @@
     <div id="ficha-page">
       <div class="ficha-titulo">FICHA DE CADASTRO DE EMPRESA</div>
       <table class="ficha">
+        <tr class="ficha-secao"><td colspan="5">DADOS CONTÁBEIS</td></tr>
         <tr class="linha-contratante">
           <td class="rotulo" style="background:transparent;color:#fff;">Contratante:</td>
           <td class="valor valor-contratante" id="v_contratante" colspan="2"></td>
@@ -260,6 +340,23 @@
           <td class="rotulo">TRIBUTAÇÃO</td><td class="valor" id="v_tributacao"></td>
           <td class="rotulo2">VALOR CAPITAL</td><td class="valor destaque" id="v_valorcapital" colspan="2"></td>
         </tr>
+
+        <tr class="ficha-secao"><td colspan="5">DEPARTAMENTO PESSOAL (DP)</td></tr>
+        <tr>
+          <td class="rotulo">Pró-labore:</td><td class="valor" id="v_prolabore"></td>
+          <td class="rotulo2">Funcionários:</td><td class="valor" id="v_funcionarios" colspan="2"></td>
+        </tr>
+
+        <tr class="ficha-secao"><td colspan="5">FISCAL</td></tr>
+        <tr><td class="rotulo">Emissão de nota pelo escritório:</td><td class="valor" id="v_emissaonota" colspan="4"></td></tr>
+        <tr>
+          <td class="rotulo">Situação:</td><td class="valor" id="v_situacao"></td>
+          <td class="rotulo2">Anexo Simples:</td><td class="valor" id="v_anexosimples" colspan="2"></td>
+        </tr>
+        <tr>
+          <td class="rotulo">Insc. Estadual:</td><td class="valor" id="v_ie"></td>
+          <td class="rotulo2">Insc. Municipal:</td><td class="valor" id="v_im" colspan="2"></td>
+        </tr>
       </table>
     </div>
   </div>
@@ -279,7 +376,10 @@ if (window['pdfjsLib']) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 }
 
-const CAMPOS = ['contratante','numero','cnpj','endereco','bairro','cidade','estado','cep','email','contato','administracao','socio1','capital1','socio2','capital2','vigencia','plano','cnae1','cnae2','tributacao','valorcapital'];
+const CAMPOS = ['contratante','numero','cnpj','endereco','bairro','cidade','estado','cep','email','contato','administracao','socio1','capital1','socio2','capital2','vigencia','plano','cnae1','cnae2','valorcapital','prolabore','funcionarios','emissaonota','situacao','anexosimples'];
+// Tratados à parte no render(): regimetributario (alimenta a linha "TRIBUTAÇÃO") e as
+// inscrições estadual/municipal (número + checkbox "Isento").
+const CAMPOS_ESPECIAIS = ['regimetributario','ienumero','ieisento','imnumero','imisento'];
 
 function $(id){ return document.getElementById(id); }
 
@@ -339,13 +439,44 @@ function render(){
   $('v_plano').textContent = v.plano;
   $('v_cnae1').textContent = v.cnae1;
   $('v_cnae2').textContent = v.cnae2;
-  $('v_tributacao').textContent = v.tributacao;
   $('v_valorcapital').textContent = v.valorcapital;
+
+  $('v_tributacao').textContent = $('f_regimetributario').value;
+
+  $('v_prolabore').textContent = v.prolabore;
+  $('v_funcionarios').textContent = v.funcionarios;
+  $('v_emissaonota').textContent = v.emissaonota;
+  $('v_situacao').textContent = v.situacao;
+  $('v_anexosimples').textContent = v.anexosimples;
+
+  const ieIsento = $('f_ieisento').checked;
+  $('f_ienumero').disabled = ieIsento;
+  if(ieIsento) $('f_ienumero').value = '';
+  $('v_ie').textContent = ieIsento ? 'Isento' : $('f_ienumero').value.trim();
+
+  const imIsento = $('f_imisento').checked;
+  $('f_imnumero').disabled = imIsento;
+  if(imIsento) $('f_imnumero').value = '';
+  $('v_im').textContent = imIsento ? 'Isento' : $('f_imnumero').value.trim();
+}
+
+// Anexo do Simples só faz sentido quando o regime é Simples Nacional.
+function toggleAnexoSimples(){
+  const ehSimples = $('f_regimetributario').value === 'Simples Nacional';
+  $('bloco-anexo-simples').style.display = ehSimples ? '' : 'none';
+  if(!ehSimples) $('f_anexosimples').value = '';
+  render();
 }
 
 function limparTudo(){
   if(!confirm('Limpar todos os campos da ficha?')) return;
   CAMPOS.forEach(c => { const el = $('f_'+c); if(el) el.value=''; });
+  CAMPOS_ESPECIAIS.forEach(c => {
+    const el = $('f_'+c);
+    if(!el) return;
+    if(el.type === 'checkbox') el.checked = false; else el.value = '';
+  });
+  $('bloco-anexo-simples').style.display = 'none';
   $('input-cnpj').value = '';
   $('resumo-cnpj').innerHTML = '';
   render();
